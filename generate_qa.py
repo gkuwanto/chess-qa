@@ -33,7 +33,7 @@ Zcount = [str(i) for i in range(1,32)]
 
 SQUARES = []
 for y in list(range(1,9)):
-	for x in string.lowercase[:8]:
+	for x in "abcdefgh":
 		SQUARES.append((x,str(y)))
 
 ID2SQUARE = dict(enumerate(SQUARES))
@@ -888,8 +888,11 @@ def write_qa(board,m,q,a,c, q_text, meta = ''):
 	moves = " ".join(m)
 	moves = moves[:-1] if moves[-1] == "#" else moves
 
-	print >> open(PREFIX+f_name+'.txt','w'), "\t".join([q_text,moves,fen,a])
-#	print >> open(PREFIX+f_name+'.fen','w'), fen ## if you want to print FEN too, uncomment
+	with open(PREFIX+f_name+'.txt','w') as f:
+		f.write("\t".join([q_text,moves,fen,a]))
+
+	with open(PREFIX+f_name+'.fen','w') as f:
+		f.write(fen)
 
 CHECK = { 0 : q_checkmate, 1 : q_stalemate, 2 : q_castling_rights, 3 : q_castle, 4 : q_material_adv, 5 : q_material_count, 6 : q_check}
 QTEXT = { 0 : t_checkmate, 1 : t_stalemate, 2 : t_castling_rights, 3 : t_castle, 4 : t_material_adv, 5 : t_material_count, 6: t_check, 7 : t_attack, 8 : t_position, 9 : t_count_all_pieces, 10 : t_count_board , 11 : t_existence_side, 12 : t_existence, 13 : t_legal_move, 14 : t_is_attacked}
@@ -897,16 +900,16 @@ GENERATE = { 0 : g_checkmate, 1: g_stalemate, 2 : g_castling_rights, 3 : g_castl
 
 def read_games(pgn_file, n_matches):
 
-	pgn = open(pgn_file)
-	g_count = 0
-	games = []
-	while pgn.tell() != os.fstat(pgn.fileno()).st_size:
-		game = chess.pgn.read_game(pgn)
-		games.append(game)
-		g_count += 1
-		if g_count == n_matches:
-			break
-	print >> sys.stderr, "Total ",g_count,"games has been read"
+	with open(pgn_file) as pgn:
+		g_count = 0
+		games = []
+		while pgn.tell() != os.fstat(pgn.fileno()).st_size:
+			game = chess.pgn.read_game(pgn)
+			games.append(game)
+			g_count += 1
+			if g_count == n_matches:
+				break
+	print("Total {} games has been read".format(g_count))
 	return games
 
 if __name__ == "__main__":
@@ -932,4 +935,4 @@ if __name__ == "__main__":
 		os.system('rm -rf '+PREFIX)
 		os.system('mkdir -p '+PREFIX)
 		GENERATE[q_type](q_type,games, p.total_count)
-		print >> sys.stderr, "DONE!",q_type
+		print("DONE! {}".format(q_type))
