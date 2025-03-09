@@ -7,7 +7,7 @@ answer : list of pieces, yes/no or numbers
 '''
 
 import chess, chess.pgn, os, sys, string
-import itertools,random
+import random
 from random import shuffle
 from visualizer import *
 from utils import *
@@ -29,10 +29,10 @@ POLAR = ['yes','no']
 PIECE_VAL = {1 : 1, 2 : 3 , 3: 3 , 4 : 5 , 5 : 9}
 SIDES = ['black','white']
 PIECES = ['pawn','knight','bishop','rook','queen','king']
-Zcount = [str(i) for i in xrange(1,32)]
+Zcount = [str(i) for i in range(1,32)]
 
 SQUARES = []
-for y in list(xrange(1,9)):
+for y in list(range(1,9)):
 	for x in string.lowercase[:8]:
 		SQUARES.append((x,str(y)))
 
@@ -115,7 +115,7 @@ def check_castling(board,side):
 
 def calculate_material(board,side):
 	m = 0
-	for piece in xrange(1,6):
+	for piece in range(1,6):
 		m += len(list(board.pieces(piece,side)))*PIECE_VAL[piece]
 	return m
 
@@ -217,7 +217,7 @@ def g_is_attacked(q_type, games, total_count):
 						answer_count[(a,INV_COLOR[attacked_side],attacked_piece)] += 1
 						write_qa(board,moves,q_type,a,total, QTEXT[q_type](INV_COLOR[attacked_side],attacked_piece,"".join(ID2SQUARE[attacked_sq])))
 						total += 1
-						print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+						print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 						qset.add("".join(moves))
 						if total == total_count:
 							return
@@ -262,7 +262,7 @@ def g_legal_move(q_type, games, total_count):
 					answer_count[(a,candidate_move)] += 1
 					write_qa(board,moves,q_type,a,total, QTEXT[q_type](candidate_move))
 					total += 1
-					print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+					print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 					if total == total_count:
 						return
 
@@ -281,7 +281,7 @@ def g_legal_move(q_type, games, total_count):
 					answer_count[('no',candidate_move)] += 1
 					write_qa(board,moves,q_type,a,total, QTEXT[q_type](candidate_move))
 					total += 1
-					print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+					print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 					if total == total_count:
 						return
 
@@ -326,7 +326,7 @@ def g_existence(q_type, games, total_count):
 						answer_count[(a,p)] += 1
 						write_qa(board,moves,q_type,a,total, QTEXT[q_type](p))
 						total += 1
-						print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+						print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 						qset.add("".join(moves))
 						if total == total_count:
 							return
@@ -368,11 +368,11 @@ def g_existence_side(q_type, games, total_count):
 						side = BOOL[s]
 						c = len(list(board.pieces(PIECES.index(p)+1,side)))
 						a = 'no' if c == 0 else 'yes'
- 						if answer_count[(a,p,s)] < count and len(moves) > 1 and total < total_count and "".join(moves) not in qset:
+						if answer_count[(a,p,s)] < count and len(moves) > 1 and total < total_count and "".join(moves) not in qset:
 							answer_count[(a,p,s)] += 1
 							write_qa(board,moves,q_type,a,total,QTEXT[q_type](s,p))
 							total += 1
-							print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+							print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 							qset.add("".join(moves))
 							if total == total_count:
 								return
@@ -384,7 +384,7 @@ def g_count_board(q_type, games, total_count):
 	total = 0
 	unique_answer = 0
 
-	for c in xrange(2,32):
+	for c in range(2,32):
 		answer_count[c] = 0
 		unique_answer += 1
 
@@ -410,14 +410,14 @@ def g_count_board(q_type, games, total_count):
 				c = 0
 				for s in SIDES:
 					side = BOOL[s]
-					for piece in xrange(6):
+					for piece in range(6):
 						c += len(list(board.pieces(piece+1,side)))
 
 				if answer_count[c] < count and len(moves) > 1 and total < total_count and "".join(moves) not in qset:
 					answer_count[c] += 1
 					write_qa(board,moves,q_type,str(c),total, QTEXT[q_type]())
 					total += 1
-					print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+					print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 
 					qset.add("".join(moves))
 					if total == total_count:
@@ -432,7 +432,7 @@ def g_count_all_pieces(q_type, games, total_count):
 
 	answer_count = defaultdict(lambda: total_count)
 	for s in SIDES:
-		for c in xrange(1,16):
+		for c in range(1,16):
 			answer_count[(s,c)] = 0
 			unique_answer += 1
 	count = total_count / unique_answer + FIXED
@@ -451,14 +451,14 @@ def g_count_all_pieces(q_type, games, total_count):
 					board = node.board()
 					i += 1
 					c = 0
-					for piece in xrange(6):
+					for piece in range(6):
 						c += len(list(board.pieces(piece+1,side)))
 
 					if answer_count[(s,c)] < count and len(moves) > 1 and total < total_count and "".join(moves) not in qset:
 						answer_count[(s,c)] += 1
 						write_qa(board,moves,q_type,str(c),total, QTEXT[q_type](s))
 						total += 1
-						print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+						print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 						qset.add("".join(moves))
 						if total == total_count:
 							return
@@ -503,7 +503,7 @@ def g_position(q_type, games, total_count):
 								answer_count[(s,p,sq)] += 1
 								write_qa(board,moves,q_type,s+p,total, QTEXT[q_type](sq))
 								total += 1
-								print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+								print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 								qset.add("".join(moves))
 								if total == total_count:
 									return
@@ -559,21 +559,21 @@ def g_attack(q_type, games, total_count):
 							answer_count[(a,s,p,sq)] += 1
 							write_qa(board,moves,q_type,a,total, QTEXT[q_type](s,p,sq))
 							total += 1
-							print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+							print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 
 							qset.add("".join(moves))
 							if total == total_count:
 								return
 							break
 
-						square = random.choice(xrange(64))
+						square = random.choice(range(64))
 						a = 'no'
 						if square not in set(sq_list) and answer_count[a,s,p,sq] < count and len(moves) > 1 and total < total_count and "".join(moves) not in qset:
 							sq = ID2SQUARE[square]
 							answer_count[(a,s,p,sq)] += 1
 							write_qa(board,moves,q_type,a,total, QTEXT[q_type](s,p,sq))
 							total += 1
-							print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+							print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 							qset.add("".join(moves))
 							if total == total_count:
 								return
@@ -615,7 +615,7 @@ def g_check(q_type, games, total_count):
 						answer_count[(answer,side)] += 1
 						write_qa(board,moves,q_type,answer,total, QTEXT[q_type](side))
 						total += 1
-						print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+						print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 						qset.add("".join(moves))
 						if total == total_count:
 							return
@@ -626,7 +626,7 @@ def g_check(q_type, games, total_count):
 						answer_count[(answer,side)] += 1
 						write_qa(board,moves,q_type,answer,total, QTEXT[q_type](side))
 						total += 1
-						print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+						print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 						qset.add("".join(moves))
 						if total == total_count:
 							return
@@ -669,7 +669,7 @@ def g_material_count(q_type, games, total_count):
 							write_qa(board,moves,q_type,answer,total, QTEXT[q_type](side))
 							qset.add("".join(moves))
 							total += 1
-							print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+							print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 							if total == total_count:
 								return
 							break
@@ -696,7 +696,7 @@ def g_material_adv(q_type, games, total_count):
 					answer_count[answer] += 1
 					write_qa(board,moves,q_type,answer,total, QTEXT[q_type]())
 					total += 1
-					print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+					print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 					if total == total_count:
 						return
 
@@ -724,7 +724,7 @@ def g_castle(q_type, games, total_count):
 						answer_count[(side,answer)] += 1
 						write_qa(board,moves,q_type,answer,total, QTEXT[q_type](side))
 						total += 1
-						print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+						print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 						if total == total_count:
 							return
 
@@ -750,7 +750,7 @@ def g_castling_rights(q_type, games, total_count):
 						answer_count[(side,answer)] += 1
 						write_qa(board,moves,q_type,answer,total, QTEXT[q_type](side))
 						total += 1
-						print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+						print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 						if total == total_count:
 							return
 
@@ -775,7 +775,7 @@ def g_stalemate(q_type, games, total_count):
 				answer_count[answer] += 1
 				write_qa(board,moves,q_type,answer,total,QTEXT[q_type]())
 				total += 1
-				print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+				print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 				if total == total_count:
 					return
 
@@ -799,7 +799,7 @@ def g_stalemate(q_type, games, total_count):
 				answer_count[answer] += 1
 				write_qa(board,moves,q_type,answer,total,QTEXT[q_type]())
 				total += 1
-				print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+				print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 				if total == total_count:
 					return
 
@@ -824,7 +824,7 @@ def g_checkmate(q_type, games, total_count):
 				answer_count['no'] += 1
 				write_qa(board,moves,q_type,'no',total,QTEXT[q_type]())
 				total += 1
-				print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+				print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 				if total == total_count:
 					return
 
@@ -847,7 +847,7 @@ def g_checkmate(q_type, games, total_count):
 				answer_count['yes'] += 1
 				write_qa(board,moves,q_type,'yes',total,QTEXT[q_type]())
 				total += 1
-				print "{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer)
+				print("{}/{} generated for type {}. answer type per question {}".format(total,total_count,q_type, unique_answer))
 				if total == total_count:
 					return
 
@@ -925,7 +925,7 @@ if __name__ == "__main__":
 		st = int(p.q_type)
 		end = int(p.q_type) +1
 
-	for q_type in xrange(st,end):
+	for q_type in range(st,end):
 
 		PREFIX = PATH + '/' + str(q_type) + '/'
 

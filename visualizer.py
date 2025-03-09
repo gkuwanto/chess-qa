@@ -138,7 +138,7 @@ class DrawChessPosition(object):
 		d = ImageDraw.Draw(board)
 		font = ImageFont.truetype("arial.ttf",11)
 		x = string.lowercase[:8]
-		for i in xrange(0,8):
+		for i in range(0,8):
 			d.text( ( 45 + i*50, 388) , x[i] , fill = (0,256), font = font)
 			d.text( (1, 350 - i*50) , str(i+1) , fill = (0,256), font = font)
 
