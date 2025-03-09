@@ -102,7 +102,7 @@ class DrawChessPosition(object):
 		self.piece_w, self.piece_h = piece_sizes.pop()
 		self.piece_images = piece_images
 		self.piece_masks = dict((pc, img.split()[3]) for pc, img in
-								 self.piece_images.iteritems())
+								 self.piece_images.items())
 	
 	def create_blank_board(self):
 		'''Pre-render a blank board.'''
@@ -137,8 +137,8 @@ class DrawChessPosition(object):
 
 		d = ImageDraw.Draw(board)
 		font = ImageFont.truetype("arial.ttf",11)
-		x = string.lowercase[:8]
-		for i in xrange(0,8):
+		x = "abcdefgh"
+		for i in range(0,8):
 			d.text( ( 45 + i*50, 388) , x[i] , fill = (0,256), font = font)
 			d.text( (1, 350 - i*50) , str(i+1) , fill = (0,256), font = font)
 
